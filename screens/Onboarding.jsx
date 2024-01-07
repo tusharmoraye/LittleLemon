@@ -1,22 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Hero from "../components/Hero";
 
-export default function Onboarding() {
-  const [searchQuery, setSearchQuery] = useState("");
+export default function Onboarding({ navigation }) {
+  const [user, setUser] = useState({ firstName: "", lastName: "", email: "" });
+  const [disabled, setDisabled] = useState(true);
+
+  const handleRegister = async () => {
+    try {
+      if (user.firstName && user.lastName && user.email) {
+        await AsyncStorage.setItem("@LittleLemon:user", JSON.stringify(user));
+        navigation.replace("Home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleInputChange = (key, value) => {
+    setUser({
+      ...user,
+      [key]: value,
+    });
+  };
+
+  useEffect(() => {
+    setDisabled(!user.firstName || !user.lastName || !user.email);
+  }, [user]);
+
   return (
     <View>
-      <Hero
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        showSearch={false}
-      />
+      <Hero showSearch={false} />
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>Register</Text>
         <View style={styles.formInputContainer}>
-          <Text style={styles.formInputLabel}>Name *</Text>
-          <TextInput autoCorrect={false} style={styles.formInput} />
+          <Text style={styles.formInputLabel}>First Name *</Text>
+          <TextInput
+            autoCorrect={false}
+            style={styles.formInput}
+            value={user.firstName}
+            onChangeText={(value) => handleInputChange("firstName", value)}
+          />
+        </View>
+        <View style={styles.formInputContainer}>
+          <Text style={styles.formInputLabel}>Last Name *</Text>
+          <TextInput
+            autoCorrect={false}
+            style={styles.formInput}
+            value={user.lastName}
+            onChangeText={(value) => handleInputChange("lastName", value)}
+          />
         </View>
         <View style={styles.formInputContainer}>
           <Text style={styles.formInputLabel}>Email *</Text>
@@ -24,9 +59,15 @@ export default function Onboarding() {
             keyboardType="email-address"
             autoCorrect={false}
             style={styles.formInput}
+            value={user.email}
+            onChangeText={(value) => handleInputChange("email", value)}
           />
         </View>
-        <Pressable style={styles.submitButton}>
+        <Pressable
+          style={styles.submitButton(disabled)}
+          onPress={handleRegister}
+          disabled={disabled}
+        >
           <Text>Submit</Text>
         </Pressable>
       </View>
@@ -59,12 +100,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
   },
-  submitButton: {
+  submitButton: (disabled) => ({
     backgroundColor: "#F4CE14",
     borderRadius: 8,
     marginTop: 24,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-  },
+    opacity: disabled ? 0.5 : 1,
+  }),
 });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Pressable,
   View,
@@ -9,20 +9,51 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { MaskedTextInput } from "react-native-mask-text";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AppText from "../components/AppText";
 import AppButton from "../components/AppButton";
 import AppCheckbox from "../components/AppCheckbox";
 
-export default function Profile() {
-  const [image, setImage] = useState(null);
-
-  const [notificationStatuses, setNotificationStatuses] = useState({
-    orderStatuses: true,
-    passwordChanges: false,
-    specialOffers: true,
-    newsletter: false,
+export default function Profile({ navigation }) {
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    image: "",
+    notificationStatuses: {
+      orderStatuses: false,
+      passwordChanges: false,
+      specialOffers: false,
+      newsletter: false,
+    },
   });
+
+  useEffect(() => {
+    (async () => {
+      const userProfile = await AsyncStorage.getItem(
+        "@LittleLemon:userProfile"
+      );
+      if (userProfile) {
+        setUser(JSON.parse(userProfile));
+        return;
+      }
+
+      const user = await AsyncStorage.getItem("@LittleLemon:user");
+      if (user) {
+        const parsedUser = JSON.parse(user);
+        setUser((user) => ({ ...user, ...parsedUser }));
+      }
+    })();
+  }, []);
+
+  const handleInputChange = (key, value) => {
+    setUser({
+      ...user,
+      [key]: value,
+    });
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -32,19 +63,35 @@ export default function Profile() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      handleInputChange("image", result.assets[0].uri);
     }
   };
 
   const onCheckboxValueChange = (key, value) => {
-    setNotificationStatuses({
-      ...notificationStatuses,
+    handleInputChange("notificationStatuses", {
+      ...user.notificationStatuses,
       [key]: value,
     });
   };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("@LittleLemon:user");
+    await AsyncStorage.removeItem("@LittleLemon:userProfile");
+    navigation.pop();
+    navigation.replace("Onboarding");
+  };
+
+  const handleDiscard = () => {};
+  const handleSave = () => {
+    console.log(">> user: ", user);
+    AsyncStorage.setItem(
+      "@LittleLemon:userProfile",
+      JSON.stringify(user)
+    );
+  };
+
+  const notificationStatuses = user.notificationStatuses || {};
 
   return (
     <ScrollView style={styles.container}>
@@ -53,8 +100,8 @@ export default function Profile() {
         <AppText style={styles.formInputLabel}>Avatar</AppText>
         <View style={styles.avatarInputContainer}>
           <Pressable onPress={pickImage} style={styles.avatarContainer}>
-            {image ? (
-              <Image source={{ uri: image }} style={styles.avatarImage} />
+            {user.image ? (
+              <Image source={{ uri: user.image }} style={styles.avatarImage} />
             ) : (
               <AppText style={styles.avatarText}>TM</AppText>
             )}
@@ -65,7 +112,7 @@ export default function Profile() {
           <AppButton
             type="outline"
             variant="secondary"
-            onPress={(_) => setImage(null)}
+            onPress={(_) => handleInputChange("image", "")}
           >
             Remove
           </AppButton>
@@ -77,6 +124,10 @@ export default function Profile() {
           autoCorrect={false}
           style={styles.formInput}
           placeholder="alan"
+          value={user.firstName}
+          onChangeText={(value) => {
+            handleInputChange("firstName", value);
+          }}
         />
       </View>
 
@@ -86,6 +137,10 @@ export default function Profile() {
           autoCorrect={false}
           style={styles.formInput}
           placeholder="doe"
+          value={user.lastName}
+          onChangeText={(value) => {
+            handleInputChange("lastName", value);
+          }}
         />
       </View>
 
@@ -96,6 +151,10 @@ export default function Profile() {
           style={styles.formInput}
           keyboardType="email-address"
           placeholder="alan@gmail.com"
+          value={user.email}
+          onChangeText={(value) => {
+            handleInputChange("email", value);
+          }}
         />
       </View>
 
@@ -103,10 +162,10 @@ export default function Profile() {
         <AppText style={styles.formInputLabel}>Phone number</AppText>
         <MaskedTextInput
           mask="(999) 999-9999"
-          placeholder="MM/DD/YYYY"
-          value="(333) 999-7777"
+          placeholder="(999) 999-9999"
+          value={user.phoneNumber}
           onChangeText={(value) => {
-            console.log(value);
+            handleInputChange("phoneNumber", value);
           }}
           keyboardType="phone-pad"
           style={styles.formInput}
@@ -144,17 +203,24 @@ export default function Profile() {
         </AppCheckbox>
       </View>
 
-      <AppButton style={styles.logoutButton}>Log out</AppButton>
+      <AppButton style={styles.logoutButton} onPress={handleLogout}>
+        Log out
+      </AppButton>
 
       <View style={styles.actionButtonsContainer}>
         <AppButton
           type="outline"
           variant="secondary"
           style={styles.actionButton}
+          onPress={handleDiscard}
         >
           Discard changes
         </AppButton>
-        <AppButton variant="secondary" style={styles.actionButton}>
+        <AppButton
+          variant="secondary"
+          style={styles.actionButton}
+          onPress={handleSave}
+        >
           Save changes
         </AppButton>
       </View>
