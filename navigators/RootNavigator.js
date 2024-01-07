@@ -32,7 +32,7 @@ const RootNavigator = () => {
       screenOptions={{
         headerTitle: (props) => <Header {...props} />,
       }}
-      initialRouteName="Home"
+      initialRouteName="Profile"
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />

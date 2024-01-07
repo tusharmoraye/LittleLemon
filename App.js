@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -6,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import RootNavigator from "./navigators/RootNavigator";
 
 SplashScreen.preventAutoHideAsync();
+// LogBox.ignoreAllLogs();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
