@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { IconButton, Searchbar } from "react-native-paper";
 
-export default function Hero({ searchQuery, setSearchQuery }) {
+export default function Hero({
+  searchQuery,
+  setSearchQuery,
+  showSearch = true,
+}) {
   const [isSearchActive, setIsSearchActive] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -22,28 +26,32 @@ export default function Hero({ searchQuery, setSearchQuery }) {
         </Text>
         <Image source={require("../assets/Hero.png")} style={styles.hero} />
       </View>
-      <View style={styles.searchContainer}>
-        {isSearchActive ? (
-          <Searchbar
-            placeholder=""
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-            onIconPress={() => setIsSearchActive(false)}
-            iconColor="gray"
-            style={styles.searchbar}
-          />
-        ) : (
-          <IconButton
-            icon="magnify"
-            color="gray"
-            rippleColor="white"
-            mode="outlined"
-            size={24}
-            onPress={activateSearch}
-            style={styles.searchIcon}
-          />
-        )}
-      </View>
+      {showSearch && (
+        <View style={styles.searchContainer}>
+          {isSearchActive ? (
+            <Searchbar
+              placeholder=""
+              onChangeText={onChangeSearch}
+              value={searchQuery}
+              onIconPress={() => setIsSearchActive(false)}
+              iconColor="gray"
+              style={styles.searchbar}
+              autoCorrect={false}
+              autoComplete="off"
+            />
+          ) : (
+            <IconButton
+              icon="magnify"
+              color="gray"
+              rippleColor="white"
+              mode="outlined"
+              size={24}
+              onPress={activateSearch}
+              style={styles.searchIcon}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 }
@@ -53,6 +61,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#495E57",
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   heroTitle: {
     color: "#F4CE14",
@@ -90,6 +99,6 @@ const styles = StyleSheet.create({
     height: 48,
   },
   searchContainer: {
-    paddingVertical: 16,
+    paddingTop: 16,
   },
 });

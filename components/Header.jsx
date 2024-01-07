@@ -1,9 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { clearData } from "../database";
 
 export default function Header() {
   return (
     <View style={styles.container}>
-      <Text></Text>
+      <Pressable onPress={clearData}>
+        <Text>clear</Text>
+      </Pressable>
       <Image source={require("../assets/Logo.png")} />
       <Image source={require("../assets/Profile.png")} style={styles.profile} />
     </View>

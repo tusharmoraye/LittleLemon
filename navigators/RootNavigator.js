@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
   const loading = false;
-  const onboarded = false;
+  const onboarded = true;
   // if (loading) {
   //   return <SplashScreen />;
   // }
@@ -32,6 +32,7 @@ const RootNavigator = () => {
       screenOptions={{
         headerTitle: (props) => <Header {...props} />,
       }}
+      initialRouteName="Home"
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />

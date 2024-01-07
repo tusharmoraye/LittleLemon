@@ -7,7 +7,11 @@ export default function Onboarding() {
   const [searchQuery, setSearchQuery] = useState("");
   return (
     <View>
-      <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Hero
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showSearch={false}
+      />
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>Register</Text>
         <View style={styles.formInputContainer}>
