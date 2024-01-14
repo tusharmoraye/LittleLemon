@@ -132,6 +132,7 @@ export default function Profile({ navigation }) {
           onChangeText={(value) => {
             handleInputChange("firstName", value);
           }}
+          autoCapitalize="none"
         />
       </View>
 
@@ -145,6 +146,7 @@ export default function Profile({ navigation }) {
           onChangeText={(value) => {
             handleInputChange("lastName", value);
           }}
+          autoCapitalize="none"
         />
       </View>
 
@@ -159,6 +161,7 @@ export default function Profile({ navigation }) {
           onChangeText={(value) => {
             handleInputChange("email", value);
           }}
+          autoCapitalize="none"
         />
       </View>
 

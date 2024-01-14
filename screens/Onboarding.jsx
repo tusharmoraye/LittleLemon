@@ -49,6 +49,7 @@ export default function Onboarding({ navigation }) {
             style={styles.formInput}
             value={user.firstName}
             onChangeText={(value) => handleInputChange("firstName", value)}
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.formInputContainer}>
@@ -58,6 +59,7 @@ export default function Onboarding({ navigation }) {
             style={styles.formInput}
             value={user.lastName}
             onChangeText={(value) => handleInputChange("lastName", value)}
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.formInputContainer}>
@@ -68,6 +70,7 @@ export default function Onboarding({ navigation }) {
             style={styles.formInput}
             value={user.email}
             onChangeText={(value) => handleInputChange("email", value)}
+            autoCapitalize="none"
           />
         </View>
         <Pressable
