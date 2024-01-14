@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppText from "../components/AppText";
 import AppButton from "../components/AppButton";
 import AppCheckbox from "../components/AppCheckbox";
+import Toast from "react-native-root-toast";
 
 export default function Profile({ navigation }) {
   const [user, setUser] = useState({
@@ -82,19 +83,22 @@ export default function Profile({ navigation }) {
     navigation.replace("Onboarding");
   };
 
-  const handleDiscard = () => {};
+  const handleDiscard = () => {
+    navigation.goBack();
+  };
   const handleSave = () => {
-    console.log(">> user: ", user);
-    AsyncStorage.setItem(
-      "@LittleLemon:userProfile",
-      JSON.stringify(user)
-    );
+    AsyncStorage.setItem("@LittleLemon:userProfile", JSON.stringify(user));
+    Toast.show("Profile saved!");
+    navigation.goBack();
   };
 
   const notificationStatuses = user.notificationStatuses || {};
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      automaticallyAdjustKeyboardInsets={true}
+    >
       <AppText style={styles.formTitle}>Personal Information</AppText>
       <View style={styles.formInputContainer}>
         <AppText style={styles.formInputLabel}>Avatar</AppText>
@@ -272,6 +276,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
     paddingHorizontal: 8,
+    fontFamily: "Karla",
   },
   notificationContainer: {
     display: "flex",

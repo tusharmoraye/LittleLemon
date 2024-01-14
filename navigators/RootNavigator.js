@@ -20,7 +20,6 @@ const RootNavigator = () => {
     (async () => {
       try {
         const user = await AsyncStorage.getItem("@LittleLemon:user");
-        console.log("AsyncStorage.getItem", user);
         if (user) {
           setOnboarded(true);
         }
@@ -36,18 +35,6 @@ const RootNavigator = () => {
   if (loading) {
     return null;
   }
-
-  // if (!onboarded) {
-  //   return (
-  //     <Stack.Navigator
-  //       screenOptions={{
-  //         headerTitle: (props) => <Header {...props} />,
-  //       }}
-  //     >
-  //       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-  //     </Stack.Navigator>
-  //   );
-  // }
 
   return (
     <Stack.Navigator

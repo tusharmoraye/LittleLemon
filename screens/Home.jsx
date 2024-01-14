@@ -1,53 +1,37 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 
-import Hero from "../components/Hero";
 import {
   createTable,
   filterByQueryAndCategories,
   getMenuItems,
   saveMenuItems,
 } from "../database";
-import { useUpdateEffect } from "../utils";
+import { fetchMenuData, useUpdateEffect } from "../utils";
+import AppText from "../components/AppText";
+import Hero from "../components/Hero";
 import Filters from "../components/Filters";
 import MenuItem from "../components/MenuItem";
-
-const API_URL =
-  "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [menuData, setMenuData] = useState([]);
   const [filterSelections, setFilterSelections] = useState([]);
 
-  const fetchData = async () => {
-    const response = await await (await fetch(API_URL)).json();
-    return response.menu;
-  };
-
   useEffect(() => {
     (async () => {
       try {
         await createTable();
         let menuItems = await getMenuItems();
-        console.log("before: menuItems: ", menuItems);
-
         if (!menuItems.length) {
-          const menuItems = await fetchData();
-          console.log("menuItems: ", menuItems);
-          saveMenuItems(menuItems);
+          menuItems = await fetchMenuData();
+          await saveMenuItems(menuItems);
+          menuItems = await getMenuItems();
         }
 
         setMenuData(menuItems);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     })();
   }, []);
@@ -60,8 +44,8 @@ export default function Home() {
           filterSelections
         );
         setMenuData(menuItems);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     })();
   }, [filterSelections, searchQuery]);
@@ -70,7 +54,7 @@ export default function Home() {
     <SafeAreaView style={styles.container}>
       <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      <Text style={styles.subTitle}>Order FOR DELIVERY!</Text>
+      <AppText style={styles.subTitle}>Order FOR DELIVERY!</AppText>
       <View>
         <Filters
           filterSelections={filterSelections}
@@ -94,7 +78,7 @@ export default function Home() {
                 },
               ]}
             >
-              <Text></Text>
+              <AppText></AppText>
             </View>
           );
         }}

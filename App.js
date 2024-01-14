@@ -2,11 +2,9 @@ import { useCallback } from "react";
 import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import RootNavigator from "./navigators/RootNavigator";
-
-// SplashScreen.preventAutoHideAsync();
-// LogBox.ignoreAllLogs();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -14,19 +12,15 @@ export default function App() {
     MarkaziText: require("./assets/fonts/MarkaziText-Regular.ttf"),
   });
 
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
-
   if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <NavigationContainer>
-      <RootNavigator />
-    </NavigationContainer>
+    <RootSiblingParent>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+    </RootSiblingParent>
   );
 }

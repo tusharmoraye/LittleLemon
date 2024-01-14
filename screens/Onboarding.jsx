@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Hero from "../components/Hero";
+import AppText from "../components/AppText";
 
 export default function Onboarding({ navigation }) {
   const [user, setUser] = useState({ firstName: "", lastName: "", email: "" });
@@ -31,12 +38,12 @@ export default function Onboarding({ navigation }) {
   }, [user]);
 
   return (
-    <View>
+    <ScrollView automaticallyAdjustKeyboardInsets={true}>
       <Hero showSearch={false} />
       <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Register</Text>
+        <AppText style={styles.formTitle}>Register</AppText>
         <View style={styles.formInputContainer}>
-          <Text style={styles.formInputLabel}>First Name *</Text>
+          <AppText style={styles.formInputLabel}>First Name *</AppText>
           <TextInput
             autoCorrect={false}
             style={styles.formInput}
@@ -45,7 +52,7 @@ export default function Onboarding({ navigation }) {
           />
         </View>
         <View style={styles.formInputContainer}>
-          <Text style={styles.formInputLabel}>Last Name *</Text>
+          <AppText style={styles.formInputLabel}>Last Name *</AppText>
           <TextInput
             autoCorrect={false}
             style={styles.formInput}
@@ -54,7 +61,7 @@ export default function Onboarding({ navigation }) {
           />
         </View>
         <View style={styles.formInputContainer}>
-          <Text style={styles.formInputLabel}>Email *</Text>
+          <AppText style={styles.formInputLabel}>Email *</AppText>
           <TextInput
             keyboardType="email-address"
             autoCorrect={false}
@@ -68,10 +75,10 @@ export default function Onboarding({ navigation }) {
           onPress={handleRegister}
           disabled={disabled}
         >
-          <Text>Submit</Text>
+          <AppText>Submit</AppText>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -99,6 +106,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
     paddingHorizontal: 8,
+    fontFamily: "Karla",
   },
   submitButton: (disabled) => ({
     backgroundColor: "#F4CE14",

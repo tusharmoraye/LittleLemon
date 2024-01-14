@@ -1,23 +1,28 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
-import { getImageUri } from "../utils";
+import AppText from "./AppText";
+
+const imageMap = {
+  "Greek Salad": require("../assets/greek-salad.png"),
+  Bruschetta: require("../assets/bruschetta.png"),
+  "Grilled Fish": require("../assets/grilled-fish.png"),
+  Pasta: require("../assets/pasta.png"),
+  "Lemon Dessert": require("../assets/lemon-dessert.png"),
+};
 
 export default function MenuItem({ item }) {
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
-        <Text numberOfLines={1} style={styles.itemTitle}>
+        <AppText numberOfLines={1} style={styles.itemTitle}>
           {item.name}
-        </Text>
-        <Text numberOfLines={2} style={styles.itemDescription}>
+        </AppText>
+        <AppText numberOfLines={2} style={styles.itemDescription}>
           {item.description}
-        </Text>
-        <Text style={styles.itemPrice}>${item.price}</Text>
+        </AppText>
+        <AppText style={styles.itemPrice}>${item.price}</AppText>
       </View>
-      <Image
-        style={styles.itemImage}
-        source={{ uri: getImageUri(item.image) }}
-      />
+      <Image style={styles.itemImage} source={imageMap[item.name]} />
     </View>
   );
 }

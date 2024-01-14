@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { IconButton, Searchbar } from "react-native-paper";
+
+import AppText from "./AppText";
 
 export default function Hero({
   searchQuery,
@@ -17,13 +19,13 @@ export default function Hero({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heroTitle}>Little Lemon</Text>
-      <Text style={styles.heroSubTitle}>Chicago</Text>
+      <AppText style={styles.heroTitle}>Little Lemon</AppText>
+      <AppText style={styles.heroSubTitle}>Chicago</AppText>
       <View style={styles.detailsContainer}>
-        <Text style={styles.details}>
+        <AppText style={styles.details}>
           We are a family owned Mediterranean restaurant, focused on traditional
           recipes served with a modern twist.
-        </Text>
+        </AppText>
         <Image source={require("../assets/Hero.png")} style={styles.hero} />
       </View>
       {showSearch && (
@@ -78,7 +80,6 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#FFFFFF",
     fontSize: 18,
-    fontFamily: "Karla",
   },
   detailsContainer: {
     width: "100%",

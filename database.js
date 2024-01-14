@@ -6,8 +6,6 @@ export async function createTable() {
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
-        console.log("create table");
-        // tx.executeSql("drop table menuitems");
         tx.executeSql(
           "create table if not exists menuitems (id integer primary key not null, name text, description text, price text, category text, image text);"
         );
@@ -29,22 +27,28 @@ export async function getMenuItems() {
 }
 
 export function saveMenuItems(menuItems) {
-  db.transaction((tx) => {
-    const placeholders = menuItems.map(() => "(?, ?, ?, ?, ?)").join(",");
-    tx.executeSql(
-      `insert into menuitems (name, description, price, category, image) values ${placeholders}`,
-      menuItems.reduce(
-        (acc, item) => [
-          ...acc,
-          item.name,
-          item.description,
-          item.price,
-          item.category,
-          item.image,
-        ],
-        []
-      )
-    );
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      const placeholders = menuItems.map(() => "(?, ?, ?, ?, ?)").join(",");
+      tx.executeSql(
+        `insert into menuitems (name, description, price, category, image) values ${placeholders}`,
+        menuItems.reduce(
+          (acc, item) => [
+            ...acc,
+            item.name,
+            item.description,
+            item.price,
+            item.category,
+            item.image,
+          ],
+          []
+        ),
+        (_, { rows }) => {
+          resolve(rows._array);
+        },
+        reject
+      );
+    });
   });
 }
 
@@ -57,8 +61,6 @@ export async function filterByQueryAndCategories(
       const categories = activeCategories
         .map((category) => `'${category}'`)
         .join(",");
-      console.log("categories: ", categories);
-      console.log("query: ", query);
       tx.executeSql(
         `select * from menuitems where name like ? and category in (${categories})`,
         [`%${query}%`],
@@ -75,7 +77,6 @@ export async function clearData() {
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
-        // tx.executeSql("delete from menuitems");
         tx.executeSql("drop table menuitems");
       },
       reject,
